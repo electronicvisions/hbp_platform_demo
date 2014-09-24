@@ -1,0 +1,20 @@
+*** Maintainer ***
+
+	Mihai A. Petrovici <mpedro@kip.uni-heidelberg.de>
+	Paul Mueller <paul.mueller@kip.uni-heidelberg.de>
+
+*** Usage ***
+
+$ rm -f params.pkl
+$ python main.py
+
+Please note that params.pkl (a pickled parameter dictionary)
+will be used as an input if it is present in the working directory. 
+Otherwise, the dictionary parameter_space is imported from the 
+file parameters.py.
+
+
+*** Further Information ***
+
+https://gitviz.kip.uni-heidelberg.de/index.php/p/model-synfire-ffi/page/Usage/
+https://gitviz.kip.uni-heidelberg.de/index.php/p/model-synfire-ffi/doc/
