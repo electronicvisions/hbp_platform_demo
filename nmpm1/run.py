@@ -7,12 +7,11 @@ import numpy as np
 import os, sys
 
 # NM-PM1 specific initialisation
-if simulator_name == "NM-PM1":
-
+if simulator_name in ("nmpm1", "ess"):
     import pylogging
     import pyhmf as pynn
     from pymarocco import PyMarocco
-    from pyhalbe.Coordinate import SynapseDriverOnHICANN, HICANNGlobal, X, Y, Enum,  NeuronOnHICANN
+    from pyhalbe.Coordinate import SynapseDriverOnHICANN, HICANNGlobal, X, Y, Enum, NeuronOnHICANN
     import Coordinate as C
     import pyhalbe
     import pyredman
@@ -36,7 +35,10 @@ if simulator_name == "NM-PM1":
     marocco.placement.setDefaultNeuronSize(neuron_size)
     marocco.placement.use_output_buffer7_for_dnc_input_and_bg_hack = True
     marocco.placement.minSPL1 = False
-    marocco.backend = PyMarocco.Hardware
+    if simulator_name == "ess":
+        marocco.backend = PyMarocco.ESS
+    else:
+        marocco.backend = PyMarocco.Hardware
     marocco.calib_backend = PyMarocco.XML
     marocco.calib_path = "/wang/data/calibration/wafer_0"
 
@@ -51,9 +53,10 @@ if simulator_name == "NM-PM1":
     #h277.drivers().disable(SynapseDriverOnHICANN(C.Enum(2)))
     marocco.defects.inject(HICANNGlobal(Enum(277)), h277)
 
-    marocco.membrane = "membrane.dat"
-    marocco.analog_enum = 0
-    marocco.hicann_enum = HICANNGlobal(Enum(276)).id().value()
+    if simulator_name == "nmpm1":
+        marocco.membrane = "membrane.dat"
+        marocco.analog_enum = 0
+        marocco.hicann_enum = HICANNGlobal(Enum(276)).id().value()
 
     marocco.pll_freq = 100e6
     marocco.bkg_gen_isi = 10000
@@ -61,7 +64,6 @@ if simulator_name == "NM-PM1":
 
 
     pynn.setup(marocco=marocco)
-
 else:
     import pyNN.nest as pynn
 
@@ -70,7 +72,7 @@ else:
 def get_pops(n_in_pop, hicann, n_used_neuronblocks = 7):
 
     # neurons needed to fill up buffer
-    if simulator_name == "NM-PM1":
+    if simulator_name == "nmpm1":
         n_in_tmp = 32/(neuron_size/2) - n_in_pop
     else:
         n_in_tmp = 0
@@ -80,13 +82,13 @@ def get_pops(n_in_pop, hicann, n_used_neuronblocks = 7):
     for _ in xrange(n_used_neuronblocks):
         pop = pynn.Population(n_in_pop, pynn.IF_cond_exp, params)
         l.append(pop)
-        if simulator_name == "NM-PM1":
+        if simulator_name == "nmpm1":
             marocco.placement.add(pop, HICANNGlobal(Enum(hicann)))
 
         if n_in_tmp:
             tmp = pynn.Population(n_in_tmp, pynn.IF_cond_exp, params)
             l_tmp.append(tmp)
-            if simulator_name == "NM-PM1":
+            if simulator_name == "nmpm1":
                 marocco.placement.add(tmp, HICANNGlobal(Enum(hicann)))
 
     return l
@@ -105,7 +107,7 @@ params = {
 }
 
 # to be hidden
-if simulator_name == "NM-PM1":
+if simulator_name in ("nmpm1", "ess"):
     params['tau_refrac'] = 20
     params['tau_m'] = 409
 
