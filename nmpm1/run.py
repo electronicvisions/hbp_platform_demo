@@ -8,13 +8,19 @@ import os, sys
 
 # NM-PM1 specific initialisation
 if simulator_name == "NM-PM1":
+
+    import pylogging
     import pyhmf as pynn
     from pymarocco import PyMarocco
     from pyhalbe.Coordinate import SynapseDriverOnHICANN, HICANNGlobal, X, Y, Enum,  NeuronOnHICANN
     import Coordinate as C
     import pyhalbe
-
     import pyredman
+
+    pylogging.set_loglevel(pylogging.get("Default"), pylogging.LogLevel.INFO)
+    pylogging.set_loglevel(pylogging.get("marocco"), pylogging.LogLevel.DEBUG)
+    pylogging.set_loglevel(pylogging.get("sthal.HICANNConfigurator.Time"), pylogging.LogLevel.DEBUG)
+
     h = pyredman.Hicann()
 
     def initBackend(fname):
@@ -24,12 +30,17 @@ if simulator_name == "NM-PM1":
             raise Exception('unable to load %s' % fname)
         return backend
 
+    neuron_size = 4
+
     marocco = PyMarocco()
     marocco.placement.setDefaultNeuronSize(neuron_size)
     marocco.placement.use_output_buffer7_for_dnc_input_and_bg_hack = True
     marocco.placement.minSPL1 = False
     marocco.backend = PyMarocco.Hardware
     marocco.calib_backend = PyMarocco.XML
+
+    marocco.roqt = "demo.roqt"
+    marocco.bio_graph = "demo.dot"
 
     h276 = pyredman.Hicann()
     #h276.drivers().disable(SynapseDriverOnHICANN(C.Enum(223)))
@@ -45,6 +56,8 @@ if simulator_name == "NM-PM1":
 
     marocco.pll_freq = 100e6
     marocco.bkg_gen_isi = 10000
+    marocco.only_bkg_visible = False
+
 
     pynn.setup(marocco=marocco)
 
@@ -89,6 +102,10 @@ params = {
                 'e_rev_I'       : -60,
                 'e_rev_E'       : -40,
 }
+
+if simulator_name == "NM-PM1":
+    params['tau_refrac'] = 20
+    params['tau_m'] = 409
 
 l_tmp = []
 
