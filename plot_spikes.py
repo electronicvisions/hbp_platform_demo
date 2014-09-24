@@ -1,19 +1,10 @@
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
 import random
 import argparse
 
-ticker.Locator.MAXTICKS *= 10
-
-parser = argparse.ArgumentParser()
-parser.add_argument('file', type=argparse.FileType('r'))
-parser.add_argument('--plotfilename', default="")
-parser.add_argument('--xlim', type=float, nargs=2,default=None)
-parser.add_argument('--ylim', type=float, nargs=2,default=None)
-args = parser.parse_args()
 
 def raster(times, neurons, color='k'):
+    import matplotlib.pyplot as plt
 
     ax = plt.gca()
 
@@ -26,10 +17,12 @@ def raster(times, neurons, color='k'):
 
     return ax
 
-def plot(infilename, outfilename="", xlim=None, ylim=None):
+def plot(infilename, outfilename="", show=False, xlim=None, ylim=None):
     """
     infilename: first column neuron ids
                 second column spike times
+
+    show: [bool] show plot on screen
 
     outfilename: e.g. result.pdf, result.png
 
@@ -37,8 +30,15 @@ def plot(infilename, outfilename="", xlim=None, ylim=None):
 
     ylim: (ymin, ymax)
     """
+    if not show:
+        import matplotlib as mpl
+        mpl.use('Agg')
 
-    spikes = np.loadtxt(args.file.name)
+    import matplotlib.pyplot as plt
+    import matplotlib.ticker as ticker
+    ticker.Locator.MAXTICKS *= 10
+
+    spikes = np.loadtxt(infilename)
 
     margins={"left":0.11, "right":0.95, "top":0.95, "bottom":0.11}
 
@@ -59,12 +59,12 @@ def plot(infilename, outfilename="", xlim=None, ylim=None):
 
     plt.subplots_adjust(**margins) 
 
-    if args.xlim:
-        plt.xlim(*args.xlim)
+    if xlim:
+        plt.xlim(*xlim)
 
-    if args.ylim:
-        plt.ylim(*args.ylim)
-        yticks = np.arange(args.ylim[0], args.ylim[1], 10.0)
+    if ylim:
+        plt.ylim(*ylim)
+        yticks = np.arange(ylim[0], ylim[1], 10.0)
     else:
         plt.ylim(min(neurons)-0.5, max(neurons)+0.5)
         yticks = np.arange(min(neurons), max(neurons)+1, 10.0)
@@ -77,11 +77,21 @@ def plot(infilename, outfilename="", xlim=None, ylim=None):
     #for y in [11.5+12*n for n in xrange(15)]:
     #    plt.axhline(y)
 
-    if args.plotfilename:
-        plt.savefig(args.plotfilename)
+    if outfilename:
+        plt.savefig(outfilename)
+    if show:
+        plt.show()
 
-if __name__ ==  "__main__":
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('file', type=argparse.FileType('r'))
+    parser.add_argument('--plotfilename', default="")
+    parser.add_argument('--xlim', type=float, nargs=2, default=None)
+    parser.add_argument('--ylim', type=float, nargs=2, default=None)
+    args = parser.parse_args()
 
-    plot(args.file.name, args.plotfilename, args.xlim, args.ylim)
 
-    plt.show()
+    plot(args.file.name, args.plotfilename, True, args.xlim, args.ylim)
+
+if __name__ == "__main__":
+    main()
