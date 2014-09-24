@@ -38,6 +38,7 @@ if simulator_name == "NM-PM1":
     marocco.placement.minSPL1 = False
     marocco.backend = PyMarocco.Hardware
     marocco.calib_backend = PyMarocco.XML
+    marocco.calib_path = "/wang/data/calibration/wafer_0"
 
     marocco.roqt = "demo.roqt"
     marocco.bio_graph = "demo.dot"
@@ -103,6 +104,7 @@ params = {
                 'e_rev_E'       : -40,
 }
 
+# to be hidden
 if simulator_name == "NM-PM1":
     params['tau_refrac'] = 20
     params['tau_m'] = 409
