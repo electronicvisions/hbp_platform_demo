@@ -88,6 +88,6 @@ plt.xlim((0, runtime))
 plt.ylim((-0.5, noPops * (popSize['exc'] + popSize['inh']) + 0.5))
 plt.xlabel('time (t)')
 plt.ylabel('neuron index')
-plt.savefig('results.png')
+plt.savefig('result.png')
 
 pynn.end()
