@@ -72,7 +72,7 @@ else:
 def get_pops(n_in_pop, hicann, n_used_neuronblocks = 7):
 
     # neurons needed to fill up buffer
-    if simulator_name == "nmpm1":
+    if simulator_name in ("nmpm1", "ess"):
         n_in_tmp = 32/(neuron_size/2) - n_in_pop
     else:
         n_in_tmp = 0
