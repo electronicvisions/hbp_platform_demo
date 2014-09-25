@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use('Agg')
 import sys, os
 
 backend = 'nest'
@@ -27,9 +29,8 @@ neuronPermutation = list(np.array(zip(range(3 * 64, 4 * 64),
                                       range(4 * 64, 5 * 64),
                                       range(5 * 64, 6 * 64))).flatten()) + range(192)
 
-if backend == 'nest':
-    neuronParams = {}
-elif backend == 'hardware.stage1':
+neuronParams = {}
+if backend == 'hardware.stage1':
     neuronParams = {
         'v_rest'   : -65.0, # mV
         'v_thresh' : -58.0, # mV
@@ -42,9 +43,10 @@ elif backend == 'hardware.stage1':
 
 pynn.setup(neuronPermutation=neuronPermutation, assertSilence=True)
 
-neuronModel = pynn.IF_cond_exp
 if backend == 'hardware.stage1':
     neuronModel = pynn.IF_facets_hardware1
+else:
+    neuronModel = pynn.IF_cond_exp
 
 #create synfire populations
 popCollector = {'exc': [], 'inh': []}
@@ -90,11 +92,11 @@ color = 'k'
 for synType in ['exc', 'inh']:
     for popIndex in range(noPops):
         if synType == 'exc':
-            color = 'b'
+            color = 'r'
             if not backend == 'hardware.stage1':
                 indexMod = 2 * popIndex * popSize[synType]
         elif synType == 'inh':
-            color = 'r'
+            color = 'b'
             if not backend == 'hardware.stage1':
                 indexMod = (2 * popIndex + 1) * popSize[synType]
         else:
