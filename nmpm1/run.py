@@ -46,7 +46,10 @@ if simulator_name in ("nmpm1", "ess"):
     marocco.bio_graph = "demo.dot"
 
     h276 = pyredman.Hicann()
-    #h276.drivers().disable(SynapseDriverOnHICANN(C.Enum(223)))
+    h276.drivers().disable(SynapseDriverOnHICANN(C.Enum(6)))
+    h276.drivers().disable(SynapseDriverOnHICANN(C.Enum(20)))
+    h276.drivers().disable(SynapseDriverOnHICANN(C.Enum(102)))
+    h276.drivers().disable(SynapseDriverOnHICANN(C.Enum(104)))
     marocco.defects.inject(HICANNGlobal(Enum(276)), h276)
 
     h277 = pyredman.Hicann()
@@ -167,6 +170,12 @@ for pop in l_tmp:
     asm += pop
 
 spikes = asm.getSpikes()
+
+# filter one misbehaving neuron
+# (not needed if filter on time is applied
+# spikes = spikes[spikes[:,0]!=90]
+# filter late spikes
+spikes = spikes[spikes[:,1]<3.]
 
 print spikes
 print "N spikes", len(spikes)
