@@ -53,10 +53,10 @@ if simulator_name in ("nmpm1", "ess"):
     #h277.drivers().disable(SynapseDriverOnHICANN(C.Enum(2)))
     marocco.defects.inject(HICANNGlobal(Enum(277)), h277)
 
-    if simulator_name == "nmpm1":
-        marocco.membrane = "membrane.dat"
-        marocco.analog_enum = 0
-        marocco.hicann_enum = HICANNGlobal(Enum(276)).id().value()
+    #if simulator_name == "nmpm1":
+    #    marocco.membrane = "membrane.dat"
+    #    marocco.analog_enum = 0
+    #    marocco.hicann_enum = HICANNGlobal(Enum(276)).id().value()
 
     marocco.pll_freq = 100e6
     marocco.bkg_gen_isi = 10000
@@ -135,7 +135,7 @@ con_alltoall = pynn.AllToAllConnector(weights=w_exc)
 con_fixednumberpre = pynn.FixedNumberPreConnector(n=4, weights=w_exc)
 
 # record membrane of one neuron
-pynn.PopulationView(all_pops[0], [0]).record_v()
+#pynn.PopulationView(all_pops[0], [0]).record_v()
 
 # stimulate the first population with a single spike (3 times)
 spike_times = [0, 1000, 2000]
