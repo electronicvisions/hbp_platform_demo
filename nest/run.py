@@ -23,13 +23,34 @@ stimulusOnset = 25.0
 stimulusSigma = 0.5
 rng_seed = 42
 
-pynn.setup()
+neuronPermutation = list(np.array(zip(range(3 * 64, 4 * 64),
+                                      range(4 * 64, 5 * 64),
+                                      range(5 * 64, 6 * 64))).flatten()) + range(192)
+
+if backend == 'nest':
+    neuronParams = {}
+elif backend == 'hardware.stage1':
+    neuronParams = {
+        'v_rest'   : -65.0, # mV
+        'v_thresh' : -58.0, # mV
+        'tau_syn_E': 20.,   # ms
+        'tau_syn_I': 10.0,  # ms
+        'g_leak' : 200.0,
+        'v_reset'   : -70.0, # mV
+        'e_rev_I'  : -95.0,  # mV
+        }
+
+pynn.setup(neuronPermutation=neuronPermutation, assertSilence=True)
+
+neuronModel = pynn.IF_cond_exp
+if backend == 'hardware.stage1':
+    neuronModel = pynn.IF_facets_hardware1
 
 #create synfire populations
 popCollector = {'exc': [], 'inh': []}
 for popIndex in range(noPops):
     for synType in ['exc', 'inh']:
-        pop = pynn.Population(popSize[synType], pynn.IF_cond_exp)
+        pop = pynn.Population(popSize[synType], neuronModel, neuronParams)
         pop.record()
         popCollector[synType].append(pop)
 
@@ -69,11 +90,13 @@ color = 'k'
 for synType in ['exc', 'inh']:
     for popIndex in range(noPops):
         if synType == 'exc':
-            indexMod = 2 * popIndex * popSize[synType]
             color = 'b'
+            if not backend == 'hardware.stage1':
+                indexMod = 2 * popIndex * popSize[synType]
         elif synType == 'inh':
-            indexMod = (2 * popIndex + 1) * popSize[synType]
             color = 'r'
+            if not backend == 'hardware.stage1':
+                indexMod = (2 * popIndex + 1) * popSize[synType]
         else:
             assert(True)
         spikes = popCollector[synType][popIndex].getSpikes()
