@@ -1,1 +1,5 @@
-Spikey
+module load pynn/0.6.0-hw
+cd ~/spikey/symap2ic_spikey4
+. bootstrap.sh.UHEI
+cd -
+python run.py hardware.stage1

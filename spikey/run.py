@@ -17,15 +17,15 @@ import matplotlib.pyplot as plt
 runtime = 300.0
 noPops = 11
 popSize = {'exc': 8, 'inh': 8}
-weightExcExc = 0.02
-weightExcInh = 0.02
-weightInhExc = 0.2
+weightExcExc = 0.0035 #TODO: adapt in calib or switch
+weightExcInh = 0.0020
+weightInhExc = 0.015
 delay = 3.0
 stimulusOnset = 25.0
 stimulusSigma = 0.5
 rng_seed = 42
 
-neuronPermutation = list(np.array(zip(range(3 * 64, 4 * 64),
+neuronPermutation = list(np.array(zip(range(3 * 64, 4 * 64), #TODO: really necessary?
                                       range(4 * 64, 5 * 64),
                                       range(5 * 64, 6 * 64))).flatten()) + range(192)
 
