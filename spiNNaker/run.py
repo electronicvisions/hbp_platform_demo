@@ -62,8 +62,9 @@ spikes = None
 # Collect and record spikes
 for pop in all_pops:
     new_spikes = pop.getSpikes(compatible_output=True)
-    numpy.fliplr(new_spikes)
     if new_spikes is not None:
+        numpy.fliplr(new_spikes)
+        new_spikes = new_spikes / [1, 1000.0]
         if spikes is None:
             spikes = new_spikes
         else:
