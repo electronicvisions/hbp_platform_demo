@@ -8,6 +8,8 @@ if len(sys.argv) != 2:
     exit()
 else:
     backend = sys.argv[1]
+    if backend == 'spikey':
+        backend = 'hardware.stage1'
 exec('import pyNN.' + backend + ' as pynn')
 
 import numpy as np
