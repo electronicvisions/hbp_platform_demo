@@ -141,7 +141,7 @@ con_fixednumberpre = pynn.FixedNumberPreConnector(n=4, weights=w_exc)
 #pynn.PopulationView(all_pops[0], [0]).record_v()
 
 # stimulate the first population with a single spike (3 times)
-spike_times = [0, 1000, 2000]
+spike_times = [0] #, 1000, 2000]
 in_0 = pynn.Population(1, pynn.SpikeSourceArray, {'spike_times': spike_times})
 for _ in xrange(4):
     for n in xrange(n_in_pop):
