@@ -14,7 +14,7 @@ def get_pops(n_in_pop, n_used_neuronblocks=7):
 
     return l
 
-pynn.setup(timestep=0.1)
+pynn.setup(timestep=1.0)
 
 duration = 1 * 30000  #ms
 
