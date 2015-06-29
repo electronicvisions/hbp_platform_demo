@@ -5,7 +5,7 @@ import pyNN.spiNNaker as pynn
 # helper function for populations
 def get_pops(n_in_pop, n_used_neuronblocks=7):
     l = []
-    model_type = pynn.IF_curr_exp
+    model_type = pynn.IF_cond_exp
 
     for _ in xrange(n_used_neuronblocks):
         pop = pynn.Population(n_in_pop, model_type, params)
@@ -16,14 +16,17 @@ def get_pops(n_in_pop, n_used_neuronblocks=7):
 
 pynn.setup(timestep=1.0)
 
-duration = 1 * 30000  #ms
+duration = 1 * 30000  # ms
 
 params = {
-            'cm'            :   0.2,
-            'v_reset'       :  -70,
-            'v_rest'        :  -50,
-            'v_thresh'      :  -47,
+    'cm': 0.2,
+    'v_reset': -70,
+    'v_rest': -50,
+    'v_thresh': -47,
+    'e_rev_I': -60,
+    'e_rev_E': -40,
 }
+
 
 n_in_pop = 12
 
@@ -33,8 +36,8 @@ all_pops.extend(get_pops(n_in_pop))
 all_pops.extend(get_pops(n_in_pop))
 # -> makes 14 population
 
-# synaptic weight, must be tuned for spinnaker
-w_exc = 0.25
+# synaptic weight
+w_exc = 0.004
 
 con_alltoall = pynn.AllToAllConnector(weights=w_exc * 4)
 con_fixednumberpre = pynn.FixedNumberPreConnector(n=4, weights=w_exc)
@@ -55,7 +58,6 @@ for pop_a, pop_b in zip(all_pops, shift(all_pops, 1)[:-1]):
     pynn.Projection(pop_a, pop_b, con_fixednumberpre, target='excitatory')
 
 pynn.run(duration)
-pynn.end()
 
 spikes = None
 
@@ -76,3 +78,5 @@ if spikes is None:
 print "N spikes", len(spikes)
 
 numpy.savetxt("spikes.dat", spikes)
+
+pynn.end()
