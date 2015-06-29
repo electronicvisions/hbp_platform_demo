@@ -37,7 +37,7 @@ all_pops.extend(get_pops(n_in_pop))
 # -> makes 14 population
 
 # synaptic weight
-w_exc = 0.004
+w_exc = 0.008
 
 con_alltoall = pynn.AllToAllConnector(weights=w_exc * 4)
 con_fixednumberpre = pynn.FixedNumberPreConnector(n=4, weights=w_exc)
