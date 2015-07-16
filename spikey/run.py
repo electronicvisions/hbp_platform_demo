@@ -34,8 +34,6 @@ if backend == 'hardware.stage1':
     neuronParams = {
         'v_rest'   : -65.0, # mV
         'v_thresh' : -58.0, # mV
-        'tau_syn_E': 20.,   # ms
-        'tau_syn_I': 10.0,  # ms
         'g_leak' : 200.0,
         'v_reset'   : -70.0, # mV
         'e_rev_I'  : -95.0,  # mV
