@@ -1,5 +1,4 @@
 from os import open, close, dup, O_WRONLY, O_CREAT
-
 oldstdout = dup(1)
 close(1)
 open("stdout", O_WRONLY|O_CREAT)
@@ -11,11 +10,10 @@ open("stderr", O_WRONLY|O_CREAT)
 
 
 import os
+import sys
 import shutil
 import plot_spikes
 import time
-
-
 
 
 from pyNN.utility import get_script_args
@@ -41,10 +39,19 @@ if not os.path.isfile(filename_spikes):
 
 plot_spikes.plot(filename_spikes, filename_result_plot)
 
+
+
+
 close(2)
 dup(oldstderr) # should dup to 2
 close(oldstderr) # get rid of left overs
 
+sys.stdout.flush() # otherwise it will end up on stdout
 close(1)
 dup(oldstdout) # should dup to 1
 close(oldstdout) # get rid of left overs
+
+# tail 'stdout' to stdout
+from __builtin__ import open
+with open('stdout', 'r') as fd:
+        print ''.join(fd.readlines()[-20:]),
