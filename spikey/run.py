@@ -4,12 +4,12 @@ import sys, os
 
 backend = 'nest'
 if len(sys.argv) != 2:
-    print 'provide PyNN backend as argument, e.g. nest, hardware.stage1 etc'
+    print 'provide PyNN backend as argument, e.g. nest, hardware.spikey etc'
     exit()
 else:
     backend = sys.argv[1]
     if backend == 'spikey':
-        backend = 'hardware.stage1'
+        backend = 'hardware.spikey'
 exec('import pyNN.' + backend + ' as pynn')
 
 import numpy as np
@@ -32,7 +32,7 @@ neuronPermutation = list(np.array(zip(range(3 * 64, 4 * 64), #TODO: really neces
                                       range(5 * 64, 6 * 64))).flatten()) + range(192)
 
 neuronParams = {}
-if backend == 'hardware.stage1':
+if backend == 'hardware.spikey':
     neuronParams = {
         'v_rest'   : -65.0, # mV
         'v_thresh' : -58.0, # mV
@@ -43,7 +43,7 @@ if backend == 'hardware.stage1':
 
 pynn.setup(neuronPermutation=neuronPermutation, assertSilence=True)
 
-if backend == 'hardware.stage1':
+if backend == 'hardware.spikey':
     neuronModel = pynn.IF_facets_hardware1
 else:
     neuronModel = pynn.IF_cond_exp
@@ -93,11 +93,11 @@ for synType in ['exc', 'inh']:
     for popIndex in range(noPops):
         if synType == 'exc':
             color = 'r'
-            if not backend == 'hardware.stage1':
+            if not backend == 'hardware.spikey':
                 indexMod = 2 * popIndex * popSize[synType]
         elif synType == 'inh':
             color = 'b'
-            if not backend == 'hardware.stage1':
+            if not backend == 'hardware.spikey':
                 indexMod = (2 * popIndex + 1) * popSize[synType]
         else:
             assert(True)
