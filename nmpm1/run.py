@@ -111,9 +111,14 @@ params = {
 }
 
 # to be hidden
-if simulator_name in ("nmpm1", "ess"):
+if simulator_name == "nmpm1":
     params['tau_refrac'] = 20
     params['tau_m'] = 409
+elif simulator_name == "ess":
+    params['tau_refrac'] = 5
+    params['tau_m'] = 10
+else:
+    raise Exception("unsupported backend: %s" % simulator_name)
 
 l_tmp = []
 
