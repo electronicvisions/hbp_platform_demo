@@ -115,7 +115,9 @@ if simulator_name == "nmpm1":
     params['tau_refrac'] = 20
     params['tau_m'] = 409
 elif simulator_name == "ess":
-    params['tau_refrac'] = 5
+    params['tau_refrac'] = 1
+    params['tau_syn_I'] = 5
+    params['tau_syn_E'] = 5
     params['tau_m'] = 10
 else:
     raise Exception("unsupported backend: %s" % simulator_name)
@@ -139,6 +141,8 @@ for ppops in pops:
 
 # synaptic weight, must be tuned for spinnaker
 w_exc =  0.004
+if simulator_name == "ess":
+    w_exc =  1.000
 
 con_alltoall = pynn.AllToAllConnector(weights=w_exc)
 con_fixednumberpre = pynn.FixedNumberPreConnector(n=4, weights=w_exc)
@@ -181,7 +185,7 @@ spikes = asm.getSpikes()
 # (not needed if filter on time is applied
 # spikes = spikes[spikes[:,0]!=90]
 # filter late spikes
-spikes = spikes[spikes[:,1]<3.]
+# spikes = spikes[spikes[:,1]<3.]
 
 print spikes
 print "N spikes", len(spikes)

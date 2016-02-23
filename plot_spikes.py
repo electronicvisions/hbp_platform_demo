@@ -36,7 +36,7 @@ def plot(infilename, outfilename="", show=False, xlim=None, ylim=None):
 
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker
-    ticker.Locator.MAXTICKS *= 10
+    ticker.Locator.MAXTICKS *= 100
 
     spikes = np.loadtxt(infilename)
 
