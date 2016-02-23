@@ -37,9 +37,10 @@ if simulator_name in ("nmpm1", "ess"):
     marocco.placement.minSPL1 = False
     if simulator_name == "ess":
         marocco.backend = PyMarocco.ESS
+        marocco.calib_backend = PyMarocco.Default
     else:
         marocco.backend = PyMarocco.Hardware
-    marocco.calib_backend = PyMarocco.XML
+        marocco.calib_backend = PyMarocco.XML
     marocco.calib_path = "/wang/data/calibration/wafer_0"
 
     marocco.roqt = "demo.roqt"
